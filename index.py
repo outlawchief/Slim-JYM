@@ -83,7 +83,7 @@ else:  #---------------------------------Already logged in Error Cases----------
     found_pass = ""
     
     for row in rows:
-      if row[2] == username:
+      if row[1] == username:
         if rows!=None:   
             print "Content-type: text/html"
             print cook
