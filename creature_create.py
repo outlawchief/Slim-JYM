@@ -35,13 +35,14 @@ if form != None:
     wisdom = form.getvalue("charwis", None)
     charisma = form.getvalue("charcha", None)
     HP = form.getvalue("charhp", None)
+    #Debugging
     print charactername
     print level
     print dexterity
     print constitution
     print intelligence
     print wisdom
-    print HP
+    print HP 
     
     if charactername != None:
         c.execute('insert into characters values(?,?,?,?,?,?,?,?,?,?,?);', (username,charactername, level,strength,dexterity,constitution,intelligence,wisdom,charisma,HP,HP))
