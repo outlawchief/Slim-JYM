@@ -15,11 +15,11 @@ if 'HTTP_COOKIE' in os.environ:
 	c = Cookie.SimpleCookie()
 	c.load(cookies)
 	
-	#username = c['username'].value
-	#password = c['password'].value
+	username = c['username'].value
+	password = c['password'].value
 	print "<html>"
 	print "<body>"
-	print "<h1>Hello Logged In User</h1>"
+	print "<h1>Hello " + username +"</h1>"
 	print "<form method = 'post' action = 'account_page1.py'>"
 	print "<input type = 'submit' value = 'User Page' >"
 	print "</form>"

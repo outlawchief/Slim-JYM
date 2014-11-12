@@ -7,6 +7,12 @@ import Cookie
 import cgitb # to facilitate debugging
 import sqlite3 # database work
 
+'''Index.py is the location where we handle all user login cases
+We cover everything from "correct username, wrong password", to "you are already logged in".
+
+All returning users will be given a suite of options that allow them to go to key points of the site
+All new users will be immediately taken to their user page as to set up other parts of their account'''
+
 cgitb.enable()
 
 form = cgi.FieldStorage() #variable "form" becomes a buffer array from passed in data
@@ -76,21 +82,50 @@ else:  #---------------------------------Already logged in Error Cases----------
       cook['with_max_age'] = 'expires in x minutes'
       cook['with_max_age']['max-age'] = 300000000000 # seconds
     
-    c.execute('select * from users where name =?;', (username,))   # find if the username is in the database
-    rows = c.fetchall() # fetch everything from database
     
     found_name = ""
     found_pass = ""
+    try:
+      for row in c.execute('select name from users where name = ?',(username,)): #Read for existing user account
+        if len(row) != 0:
+          found_name = row[0] # put matching names here
+    except sqlite3.OperationalError:   #if table does not exist create table (should never run)
+      c.execute('create table users(name varchar(100) primary key, pass varchar(100));')
+      c.execute('update users set name=? where pass=?', (username, password))
+      conn.commit()
+      print "Content-type: text/html"
+      print cook
+      print # don't forget newline
+      print "<html>"
+      print "<body>"
+      print "<h1>Welcome " + username + " created new table</h1>"
+      print "</body>"
+      print "</html>"    
+      
     
-    for row in rows:
-      if row[1] == username:
-        if rows!=None:   
+    for row in c.execute('select pass from users where name = ?', (username,)):
+      if len(row) != 0:
+        found_pass = row[0]
+        
+
+    if found_name == username:
+        if found_pass == password:
             print "Content-type: text/html"
             print cook
             print # don't forget newline
             print "<html>"
             print "<body>"
             print "<h1>Welcome back " + username + "</h1>" # Returning User
+	    print "<form method = 'post' action = 'account_page1.py'>"
+	    print "<input type = 'submit' value = 'User Page' >"
+	    print "</form>"
+	    print "<form>"
+	    print "<button onclick='killCookie()'>Log Out</button>"
+	    print "<script>"
+	    print "function killCookie() { "
+	    print "document.cookie = 'password=; expires=Thu, 01 Jan 1970 00:00:00 GMT'"
+	    print "document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 GMT' }"	
+	    print "</script>"            
             print "</body>"
             print "</html>"        
         else:
@@ -103,7 +138,7 @@ else:  #---------------------------------Already logged in Error Cases----------
             print "</html>"
     else:
       try:
-        c.execute('update users set name=? where pass=?', (username, password))
+        c.execute('insert into users values(?,?);', (username, password))
         conn.commit()
         print "Content-type: text/html"
         print "Status: 303 See other"
@@ -112,8 +147,6 @@ else:  #---------------------------------Already logged in Error Cases----------
         print # don't forget newline   
         print "<html>"
         print "<body>"
-        for row in rows:
-          print row
         print "<h1>Welcome " + username + "</h1>"  # First time user
         print "</body>"
         print "</html>"

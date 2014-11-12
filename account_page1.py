@@ -24,19 +24,19 @@ print
 if 'HTTP_COOKIE' in os.environ:
 	
 	cookies = os.environ['HTTP_COOKIE']
-	c = Cookie.SimpleCookie()
-	c.load(cookies)
+	cook = Cookie.SimpleCookie()
+	cook.load(cookies)
 	
-	username = c['username'].value
-	password = c['password'].value
+	username = cook['username'].value
+	password = cook['password'].value
+
 	
 	print "<html>"
 	print "<head><title>Logged In Page</title></head>"
-	print "<style> body {background-color: #66FF33} </style>"
 	print "<body>"
 	print "<h1>Hello " + username + "</h1>" #header
 	print "<h5>User Bio </h5>"
-	print "<textarea name='paragraph_text' cols='50' rows='10'></textarea>" # User Bio
+	print "<textarea name='paragraph_text' cols='50' rows='10'></textarea>" # User Bio Paragraph
 	print "<form method = 'post' action = 'account_page1.py'>"
 	print "<button onclick='save()'>Save Bio</button>"
 	
@@ -45,6 +45,12 @@ if 'HTTP_COOKIE' in os.environ:
 	#Log out buttion, redirects to home page
 	print "<form method = 'post' action = '210project.py'>"
 	print "<button onclick='killCookie()'>Log Out</button>"
+	print "</form>"
+	
+
+	print "<form method = 'post' action = 'creature_create.py'>"
+	print "<button>Make A New Character</button>"	
+	print "</form>"
 	
 	#Java script
 	print "<script>"
@@ -58,6 +64,7 @@ if 'HTTP_COOKIE' in os.environ:
 	print "localStorage.setItem('text', text_to_save); // save the item?"
 	print "}"
 	print "</script>"
+	print ""
 	print "</body>"
 	print "</html>"	
 else:
