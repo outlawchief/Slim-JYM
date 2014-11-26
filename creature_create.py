@@ -42,13 +42,13 @@ if form != None:
     print intelligence
     print wisdom
     print HP
-    
+
     if charactername != None:
         c.execute('insert into characters values(?,?,?,?,?,?,?,?,?,?,?);', (username,charactername, level,strength,dexterity,constitution,intelligence,wisdom,charisma,HP,HP))
         conn.commit()
     #print"<h1>Congratulations!</h1>"
      #except sqlite3.OperationalError:
-         
+
 
 
 print'''
@@ -78,6 +78,10 @@ Charisma: <input type='text' name='charcha'>
 HP: <input type='text' name='charhp'>
 '''
 print "<input type = 'submit'>"
+print "</form>"
+print "<br>"
+print "<form method = 'post' action = 'account_page1.py'>"
+print "<input type = 'submit' value = 'User Page' >"
 print "</form>"
 
 

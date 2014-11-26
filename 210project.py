@@ -5,10 +5,20 @@ import os
 import Cookie
 import cgitb # to facilitate debugging
 import cookielib
+import sqlite3
 cgitb.enable()
+
+conn = sqlite3.connect('accounts.db')
+c = conn.cursor()
 
 print "Content-type: text/html"
 print
+
+def get_users():
+	c.execute("SELECT * FROM users")
+	print(c.fetchall())
+	
+get_users()
 
 if 'HTTP_COOKIE' in os.environ:
 		cookies = os.environ['HTTP_COOKIE']

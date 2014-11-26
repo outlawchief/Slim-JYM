@@ -21,6 +21,12 @@ print "Content-type: text/html"
 print
 #--------------------------------------
 
+def get_users():
+	c.execute("SELECT * FROM users")
+	print(c.fetchall())
+	
+get_users()
+
 if 'HTTP_COOKIE' in os.environ:
 
 	cookies = os.environ['HTTP_COOKIE']
@@ -42,12 +48,24 @@ if 'HTTP_COOKIE' in os.environ:
 
 	print "</br>"
 
-	#Log out buttion, redirects to home page
+	#Log out button, redirects to home page
 	print "<form method = 'post' action = '210project.py'>"
 	print "<button onclick='killCookie()'>Log Out</button>"
 	print "</form>"
 
-
+	#Delete account button
+	#So here's the problem, I don't really know how to make a python database call 
+	#in the middle of an html database such that when the button is clicked, a function is called that will
+	#make a database call to delete the database. Since I only need the name, I am using the text box as
+	#a sort of workaround. The only other way is to use something called Flask or maybe AJAX
+	print'''
+	<br>
+	<form name = "delete" method = 'get' action = '/cgi-bin/account_page1.py'>
+	User:<br> <input type="text" name="user">
+	<input type="submit" value="Delete"'>
+	</form>
+	'''
+	
 	print "<form method = 'post' action = 'creature_create.py'>"
 	print "<button>Make A New Character</button>"
 	print "</form>"
@@ -68,6 +86,14 @@ if 'HTTP_COOKIE' in os.environ:
 	print "localStorage.setItem('text', text_to_save); // save the item?"
 	print "}"
 	print "</script>"
+	#------------------Delete Function---------------
+	print'''
+	</script>
+	<script type="text/html">
+	
+		
+	</script>
+	'''
 	print ""
 	print "</body>"
 	print "</html>"
