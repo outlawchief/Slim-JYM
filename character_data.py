@@ -28,32 +28,40 @@ except sqlite3.OperationalError:
     chars = c.execute('select * from characters where user = ?',(username,))
 print "Content-type: text/html"
 print
+
 print'''
 
 <html>
 <head>
-<script src="jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
 <script type="text/javascript">
 function showcharacter(str){
     $.ajax(
       {
-        url: "cgi-bin/cresponse.py",
+        url: "cresponse.py",
         type: "POST",
-        data: str,
-        dataType: "text",
-        success: function(dat) {
-        var res = var.split(",");
-        document.getElementById("charname").innerHTML="Character name: "+res[0];
-        document.getElementById("charlvl").innerHTML="Level: "+res[1];
-        document.getElementById("charstr").innerHTML="Strength: "+res[2];
-        document.getElementById("chardex").innerHTML="Dexterity: "+res[3];
-        document.getElementById("charcon").innerHTML="Constitution: "+res[4];
-        document.getElementById("charint").innerHTML="Intelligence: "+res[5];
-        document.getElementById("charwis").innerHTML="Wisdom: "+res[6];
-        document.getElementById("charcha").innerHTML="Charisma: "+res[7];
-        document.getElementById("charhp").innerHTML="HP: "+res[8]+"/"+res[9];
-
+        data: {param: str},
+        dataType: "json",
+        success: function(dat) { 
+		console.log(dat);
+		console.log(dat.name);
+		console.log(dat.lvl);
+        document.getElementById("charname").innerHTML="Character name: " + dat.name;
+        document.getElementById("charlvl").innerHTML="Level: "+dat.lvl;
+        document.getElementById("charstr").innerHTML="Strength: "+dat.str;
+        document.getElementById("chardex").innerHTML="Dexterity: "+ dat.dex;
+        document.getElementById("charcon").innerHTML="Constitution: "+ dat.con;
+        document.getElementById("charint").innerHTML="Intelligence: "+ dat.int;
+        document.getElementById("charwis").innerHTML="Wisdom: "+dat.wis;
+        document.getElementById("charcha").innerHTML="Charisma: "+ dat.chr;
+        document.getElementById("charhp").innerHTML="HP: "+dat.hpc+"/"+ dat.hp;
+        
         },
+        
+        error: function(html){
+          alert("ERROR");
+        }
       }
     );
   };
@@ -65,7 +73,8 @@ function showcharacter(str){
 <option value=''>Select a character:</option>
 '''
 for row in chars:
-    print "hello"
+    print row
+    print "<option value='",row[1],"'>",row[1],"</option>"
 print '''
 </select>
 </form>
@@ -79,9 +88,11 @@ print '''
 <div id="charwis">Wisdom:</div>
 <div id="charcha">Charisma:</div>
 <div id="charhp">HP: /</div>
-</body>
-</html>
 '''
+for row in chars:
+    print row[0]
+print "</body>"
+print "</html>"
 
 #create ajax tool with character data that we can change
 #character data wanted:character name, player name, character level, str, dex, con, int, wis, cha, hp

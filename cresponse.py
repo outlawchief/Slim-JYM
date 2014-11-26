@@ -6,9 +6,8 @@ import os
 import Cookie
 import cgitb # to facilitate debugging
 import sqlite3 # database work
-# Python and Gevent
-from gevent.pywsgi import WSGIServer
-from gevent import monkey
+import json #for array encoding
+
 
 #---------Connect to Database-------
 conn = sqlite3.connect('accounts.db')
@@ -18,27 +17,39 @@ cookie_string = os.environ.get('HTTP_COOKIE')  # assign string username to cooki
 cook = Cookie.SimpleCookie(cookie_string)
 username = cook['username'].value
 
+#x = {}
+#x["name"] = "Morgan"
+#x["age"] = 20 
+
+
 #-----------Header---------------------
-print "Content-type: text/html"
+print "Content-type: application/json"
 # don't forget the extra newline!
 print
 #--------------------------------------  
-
-monkey.patch_all() # makes many blocking calls asynchronous
-
-def application(environ, start_response):
-    if environ["REQUEST_METHOD"]!="GET": # your JS uses post, so if it isn't post, it isn't you
-        start_response("403 Forbidden", [("Content-Type", "text/html; charset=utf-8")])
-        return "403 Forbidden"
-    start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
-    r = environ["wsgi.input"].read() # get the post data
-    for row in c.execute('select * from characters where name = ? and user = ?',(r,username)): #Read for existing user account
+input = cgi.FieldStorage()
+output = input.getvalue("param", None) # this data should come from the ajax call in "character_data.py"
+#print json.dumps(output.strip())
+data = {}
+for row in c.execute('select * from characters where name = ?',(output.strip(),)): #Read for existing user account
         if len(row) != 0:
-            return row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10]
+			#print json.dumps("hello")
+			data["name"] = row[1]
+			data["lvl"] = row[2]
+			data["str"] = row[3]
+			data["dex"] = row[4]
+			data["con"] = row[5]
+			data["int"] = row[6]
+			data["wis"] = row[7]
+			data["chr"] = row[8]
+			data["hpc"] = row[9]
+			data["hpm"] = row[10]
 
-address = "character_data.py"
-server = WSGIServer(address, application)
-server.backlog = 256
-server.serve_forever()
-
-
+#output_new = output[1:]
+#chars = c.execute('select * from characters where user = ?',(username,))
+#for row in chars:
+    #print row[1]
+    
+#print output
+print json.dumps(data)
+				

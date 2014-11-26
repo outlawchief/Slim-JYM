@@ -86,9 +86,12 @@ else:  #---------------------------------Already logged in Error Cases----------
     found_name = ""
     found_pass = ""
     try:
-      for row in c.execute('select name from users where name = ?',(username,)): #Read for existing user account
+      for row in c.execute('select name from users where name = ?',(username,)):
+      #c.execute('select * from users'):
+        #print 'Name:', row[0]
         if len(row) != 0:
-          found_name = row[0] # put matching names here
+          found_name = row[0]
+          #found_pass = row[1]
     except sqlite3.OperationalError:   #if table does not exist create table (should never run)
       c.execute('create table users(name varchar(100) primary key, pass varchar(100));')
       c.execute('update users set name=? where pass=?', (username, password))

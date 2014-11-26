@@ -4,40 +4,39 @@ import datetime
 import os
 import Cookie
 import cgitb # to facilitate debugging
+import cookielib
 cgitb.enable()
 
 print "Content-type: text/html"
-print 
+print
 
 if 'HTTP_COOKIE' in os.environ:
-	
-	cookies = os.environ['HTTP_COOKIE']
-	c = Cookie.SimpleCookie()
-	c.load(cookies)
-	
-	username = c['username'].value
-	password = c['password'].value
-	print "<html>"
-	print "<body>"
-	print "<h1>Hello " + username +"</h1>"
-	print "<form method = 'post' action = 'account_page1.py'>"
-	print "<input type = 'submit' value = 'User Page' >"
-	print "</form>"
-	print "<form>"
-	print "<button onclick='killCookie()'>Log Out</button>"
-	print "<script>"
-	print "function killCookie() { "
-	print "document.cookie = 'password=; expires=Thu, 01 Jan 1970 00:00:00 GMT'"
-	print "document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 GMT' }"	
-	print "</script>"
-	print "</form>"
-	print "</body>"
-	print "</html>"
+		cookies = os.environ['HTTP_COOKIE']
+		c = Cookie.SimpleCookie()
+		c.load(cookies)
+		#try:
+		username = c['username'].value
+		password = c['password'].value
+		#except:exceptions.KeyError
+		print "<html>"
+		print "<body>"
+		print "<h1>Hello " + username +"</h1>"
+		print "<form method = 'post' action = 'account_page1.py'>"
+		print "<input type = 'submit' value = 'User Page' >"
+		print "</form>"
+		print "<form>"
+		print "<button onclick='killCookie()'>Log Out</button>"
+		print "<script>"
+		print "function killCookie() { "
+		print "document.cookie = 'password=; expires=Thu, 01 Jan 1970 00:00:00 GMT'"
+		print "document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 GMT' }"
+		print "</script>"
+		print "</form>"
+		print "</body>"
+		print "</html>"
 
 else:
-	#print "Content-type: text/html"
-	# don't forget the extra newline!
-	#print
+
 	print "<html>"
 	print "<head><title>My webpage</title></head>"
 	print "<body>"
