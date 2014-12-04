@@ -24,7 +24,7 @@ print
 def get_users():
 	c.execute("SELECT * FROM users")
 	print(c.fetchall())
-	
+
 get_users()
 
 if 'HTTP_COOKIE' in os.environ:
@@ -54,24 +54,50 @@ if 'HTTP_COOKIE' in os.environ:
 	print "</form>"
 
 	#Delete account button
-	#So here's the problem, I don't really know how to make a python database call 
+	#So here's the problem, I don't really know how to make a python database call
 	#in the middle of an html database such that when the button is clicked, a function is called that will
 	#make a database call to delete the database. Since I only need the name, I am using the text box as
 	#a sort of workaround. The only other way is to use something called Flask or maybe AJAX
 	print'''
-	<br>
-	<form name = "delete" method = 'get' action = '/cgi-bin/account_page1.py'>
-	User:<br> <input type="text" name="user">
-	<input type="submit" value="Delete"'>
-	</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript">
+	function del(name) {
+		$.ajax({
+			url: "delete.py",
+			data: {param: name },
+			type: "POST",
+			success: function(dat) {
+				alert("SUCCESS")
+			},
+			error: function(html){
+				alert("ERROR");
+			},
+		}).done(function(o) {
+
+		});
+
+	}
+	</script>
 	'''
+	
+	print "<form method = 'get' action = 'account_page1.py'>"
+	print "<button onclick='del("+username+")'>Delete</button>"
+	print "</form>"
 	
 	print "<form method = 'post' action = 'creature_create.py'>"
 	print "<button>Make A New Character</button>"
 	print "</form>"
 
 	print "<form method = 'post' action = 'character_data.py'>"
-	print "<button>Access Your Characters</button>"	
+	print "<button>Access Your Characters</button>"
+	print "</form>"
+
+	print "<form method = 'post' action = 'spell_create.py'>"
+	print "<button>Design a spell</button>"
+	print "</form>"
+
+	print "<form method = 'post' action = 'spells.py'>"
+	print "<button>View all spells</button>"
 	print "</form>"
 
 	#Java script
@@ -86,14 +112,8 @@ if 'HTTP_COOKIE' in os.environ:
 	print "localStorage.setItem('text', text_to_save); // save the item?"
 	print "}"
 	print "</script>"
-	#------------------Delete Function---------------
-	print'''
-	</script>
-	<script type="text/html">
+	#------------------Delete Function---------------	
 	
-		
-	</script>
-	'''
 	print ""
 	print "</body>"
 	print "</html>"
